@@ -68,7 +68,7 @@ exports.playMessageDVBS = function(options,cb){
 }
 exports.teardownMessage =function(options,cb){
     var msgOut = new String();
-    msgOut += "TEARDOWN rtsp://"+options.serverHost+":"+options.serverPort+"/"+options.stream+" RTSP/1.0\r\n";
+    msgOut += "TEARDOWN rtsp://"+options.serverHost+":"+options.serverPort+"/"+"stream="+options.stream+" RTSP/1.0\r\n";
     msgOut += "CSeq: "+options.Cseq+"\r\n";
     if(options.session !== undefined) {
         msgOut += "Session: " + options.session + "\r\n";
