@@ -1,0 +1,21 @@
+{
+  "name": "satip_client_test",
+  "description": "SAT>IP client for test RTSP communication",
+  "version": "0.0.1",
+  "author": "Jordi Font <jfont555@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jfont555/Satip_client_test"
+  },
+  "dependencies":{
+    "udp-proxy": "1.0.1",
+    "sleep": "3.0.1",
+    "logger": "0.0.1"
+  },
+  "licences":[
+    {
+      "type": "",
+      "url": " "
+    }
+  ]
+}
