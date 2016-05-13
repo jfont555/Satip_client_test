@@ -65,8 +65,8 @@ exports.setupMessageDVBS = function(options,cb){
     msgOut += "Transport: RTP/AVP;";
     if(options.multicast) {
         msgOut += "multicast;";
-        msgOut += "destination="+options.destination+";";
-        msgOut += "port="+options.port+"ttl=5;";
+        //msgOut += "destination="+options.destination+";";
+        msgOut += "port="+options.port+";ttl=5;";
     }
     else{
         msgOut += "unicast;";
