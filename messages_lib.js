@@ -66,7 +66,7 @@ exports.setupMessageDVBS = function(options,cb){
     if(options.multicast) {
         msgOut += "multicast;";
         //msgOut += "destination="+options.destination+";";
-        msgOut += "port="+options.port+";ttl=5;";
+        msgOut += "port="+options.port+"\r\n";
     }
     else{
         msgOut += "unicast;";
