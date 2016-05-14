@@ -2,7 +2,6 @@
  * Created by jfont on 17/04/16.
  */
 var Client = require('./Client.js');
-var config = require('./configuration.json'); //només es llegeix una vegada, la resta es tira de caché. (eliminar require si es vol canviar)
 var stdio = require('stdio');
 var sleep = require('sleep');
 
@@ -18,15 +17,14 @@ var  optionss= stdio.getopt({
         description: 'Multicast',
         args: 0
     },
-
-    'port': {
-        key: 'P',
-        description: 'provides the RTP/RTCP port pai for a multicast session',
-        args: 1
-    },
     'destination': {
         key: 'd',
-        description: 'indicates the address to wich the stream will be sent. Only available for multicast',
+        description: 'indicates the address to wich the stream will be sent.',
+        args: 1
+    },
+    'ttl': {
+        key: 't',
+        description: 'Time multicast',
         args: 1
     }
 });
@@ -40,8 +38,7 @@ var options = { //According to satip specification (pag.43 update 8th jan 2015),
     Cseq : '1'
 }
 
-process.argv.forEach(function (val, index, array) {
-    //console.log(index + ': ' + val);
+process.argv.forEach(function (val) {
     var arrayAux = val.split(/=/);
 
     switch(arrayAux[0]){

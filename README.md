@@ -27,6 +27,6 @@ gi=
 
 -m Boolean to indicate multicast
 
--P RTP/RTCP port pair for multicast session
-
 -d Destination IP to send stream
+
+-ttl time multicast

@@ -39,7 +39,7 @@ exports.setupMessageDVBT = function(options,cb){
     }
     else{
         msgOut += "unicast;";
-        msgOut += "client_port:"+options.clientports;
+        msgOut += "client_port:"+options.port;
     }
    //  msgOut +="\r\n";
     msgOut += "\r\n";
@@ -65,12 +65,18 @@ exports.setupMessageDVBS = function(options,cb){
     msgOut += "Transport: RTP/AVP;";
     if(options.multicast) {
         msgOut += "multicast;";
-        //msgOut += "destination="+options.destination+";";
-        msgOut += "port="+options.port+"\r\n";
+        if(options.destination !== undefined) {
+            msgOut += "destination="+options.destination+";";
+        }
+        if(options.ttl == undefined) {
+            msgOut += "port=" + options.port + "\r\n";
+        }else{
+            msgOut += "port=" + options.port +";ttl="+options.ttl+ "\r\n";
+        }
     }
     else{
         msgOut += "unicast;";
-        msgOut += "client_port="+options.clientports+"\r\n";
+        msgOut += "client_port="+options.port+"\r\n";
     }
     msgOut += "\r\n";
     cb(msgOut);
