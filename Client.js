@@ -63,8 +63,8 @@ var RTSPClient = function(Options) {
         }
         if(State == 5 && Options.session !== undefined){
             messages.playAddpids(Options, function(messagePlayAdd){
-               console.log(messagePlayAdd+"\n");
-                Client.write("\nClient Message:\n"+messagePlayAdd);
+               console.log("\nClient Message:\n"+messagePlayAdd+"\n");
+                Client.write(messagePlayAdd);
                 State = 2;
             });
         }
