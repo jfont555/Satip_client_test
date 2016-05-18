@@ -20,9 +20,9 @@ var RTSPClient = function(Options) {
 
     Client.connect(Options.serverPort, Options.externServer, function () {
         logger.debug({timestamp: Date.now()}, "Conncetion to server established");
-        console.log("Connected");
+        console.log("Connected to: "+Options.externServer);
         messages.optionsMessage(Options, function (messageOptions){
-            console.log("\nClient Message:\n"+messageOptions+" \n");
+            console.log("\n>>>\nClient Message:\n"+messageOptions+">>>");
             Client.write(messageOptions);
             State = 0;
             Options.Cseq++;
@@ -30,21 +30,21 @@ var RTSPClient = function(Options) {
     });
 
     Client.on('data', function (data) {
-        console.log("\nServer Response:\n"+data.toString());
+        console.log("\n<<<\nServer Response:\n"+data.toString()+"<<<");
 
         if(State == 0) {
             if (Options.msys === 'dvbt') {
                 messages.setupMessageDVBT(Options, function (message) {
-                    console.log("\nClient Message:\n"+message + "\n")
+                    console.log("\n>>>\nClient Message:\n"+message + ">>>")
                     Client.write(message);
                     Options.Cseq++;
                     State = 5;
                 });
             }
-            else if (Options.msys === 'dvbs') {
+            else if (Options.msys === 'dvbs' || Options.msys === 'dvbs2') {
                 messages.setupMessageDVBS(Options, function (messageSETUP) {
                     sleep.sleep(1);
-                    console.log("\nClient Message:\n"+messageSETUP);
+                    console.log("\n>>>\nClient Message:\n"+messageSETUP + ">>>");
                     Client.write(messageSETUP);
                     Options.Cseq++;
                     State = 5;
@@ -63,15 +63,27 @@ var RTSPClient = function(Options) {
         }
         if(State == 5 && Options.session !== undefined){
             messages.playAddpids(Options, function(messagePlayAdd){
-               console.log("\nClient Message:\n"+messagePlayAdd+"\n");
+               console.log("\n>>>\nClient Message:\n"+messagePlayAdd+">>>");
                 Client.write(messagePlayAdd);
                 State = 2;
             });
         }
         if(State == 2 && udpActive == false && !Options.multicast){
             var destinationPorts = Options.clientports.split(/-/);
-            var udp1 = udpf.createUdpforward(Options.destination, destinationPorts[0], destinationPorts[0]);//Modificar ports a els reservats pel servidor
-            var udp2 = udpf.createUdpforward(Options.destination, destinationPorts[1], destinationPorts[1]);
+            /*if(options.save){
+                net.createServer(function(socket) {
+
+
+                    var fs = require('fs');
+                    fs.writeFile('file.mp4', function (err) {
+                        if (err) throw err;
+                        console.log('It s saved');
+                    })
+                }).listen(destinationPorts[0],'127.0.0.1');
+            }else {*/
+                var udp1 = udpf.createUdpforward(Options.destination, destinationPorts[0], destinationPorts[0]);//Modificar ports a els reservats pel servidor
+                var udp2 = udpf.createUdpforward(Options.destination, destinationPorts[1], destinationPorts[1]);
+            //}
             udpActive = true;
         }
     });
@@ -94,7 +106,7 @@ var RTSPClient = function(Options) {
         if (State == 2 && Options.session !== undefined){
             Options.Cseq++;
             messages.optionsMessage(Options, function(messageOpt){
-                console.log("\nClient Message:\n"+messageOpt+"\n");
+                console.log("\n>>>\nClient Message:\n"+messageOpt+">>>");
                 Client.write(messageOpt);
             })
         }
