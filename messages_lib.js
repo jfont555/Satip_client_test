@@ -8,7 +8,7 @@ exports.optionsMessage = function(options,cb){
     var msgOut = new String();
     msgOut += "OPTIONS rtsp://"+options.externServer+"/ RTSP/1.0\r\n";
     msgOut += "Cseq: "+options.Cseq+"\r\n";
-    if(options.session !== undefined){
+    if(options.session !== undefined && options.session !== null){
         msgOut +="Session: "+ options.session+"\r\n";
     }
     msgOut += "\r\n";
@@ -50,7 +50,7 @@ exports.setupMessageDVBS = function(options,cb){
     var msgOut = new String();
     msgOut += "SETUP rtsp://"+options.externServer+":"+options.serverPort+"/?src="+options.src;
     if(options.fe !== undefined){msgOut += "&fe="+options.fe;}
-    msgOut +="&freq="+options.freq+"&msys=dvbs&plts="+options.plts;
+    msgOut +="&freq="+options.freq+"&msys="+options.msys+"&plts="+options.plts;
     if(options.fec !== undefined){msgOut += "&fec="+options.fec;}
     msgOut += "&pol="+options.pol+"&ro="+options.ro;
     if(options.sr !== undefined){msgOut += "&sr="+options.sr;}
@@ -94,7 +94,9 @@ exports.teardownMessage =function(options,cb){
 
 exports.playAddpids = function(options,cb){
     var msgOut = new String();
-    msgOut += "PLAY rtsp://"+options.externServer+"/stream="+options.stream+"?addpids="+options.pids+" RTSP/1.0\r\n";
+    msgOut += "PLAY rtsp://"+options.externServer+"/stream="+options.stream;
+    if(options.pids !== undefined){msgOut+="?addpids="+options.pids;}
+    msgOut +=" RTSP/1.0\r\n";
     msgOut += "Cseq: "+options.Cseq+"\r\n";
     if(options.session !== undefined) {
         msgOut += "Session: " + options.session+"\r\n";
