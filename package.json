@@ -11,7 +11,8 @@
     "sleep": "3.0.1",
     "logger": "0.0.1",
     "secret-module":"git://github.com/sandy98/node-simple-router.git",
-    "stdio":"0.2.7"
+    "stdio":"0.2.7",
+    "verbal.expressions":"0.2.1"
   },
   "licences":[
     {

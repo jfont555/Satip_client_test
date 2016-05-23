@@ -17,13 +17,28 @@ exports.optionsMessage = function(options,cb){
 exports.setupMessageDVBT = function(options,cb){
 
     var msgOut = new String();
-    msgOut += "SETUP rtsp://"+options.externServer+":"+options.serverPort+"/?freq="+options.freq;
-    if(options.bw !== undefined){msgOut +="&bw="+options.bw;}
-    msgOut += "&msys=dvbt;";
-    if(options.tmode !== undefined){msgOut += "&tmode="+options.tmode;}
-    if(options.mtype !== undefined){msgOut += "&mtype="+options.mtype;}
-    if(options.gi !== undefined){msgOut += "&gi="+options.gi;}
-    if(options.fec !== undefined){msgOut += "&fec="+options.fec;}
+    msgOut += "SETUP rtsp://"+options.externServer+":"+options.serverPort;
+    if(options.commands){
+        msgOut += options.comanda
+    }else {
+        msgOut += "/?freq=" + options.freq;
+        if (options.bw !== undefined) {
+            msgOut += "&bw=" + options.bw;
+        }
+        msgOut += "&msys=dvbt;";
+        if (options.tmode !== undefined) {
+            msgOut += "&tmode=" + options.tmode;
+        }
+        if (options.mtype !== undefined) {
+            msgOut += "&mtype=" + options.mtype;
+        }
+        if (options.gi !== undefined) {
+            msgOut += "&gi=" + options.gi;
+        }
+        if (options.fec !== undefined) {
+            msgOut += "&fec=" + options.fec;
+        }
+    }
     msgOut += "&pids=0";
     msgOut += " RTSP/1.0\r\n";
     msgOut += "CSeq: "+options.Cseq+"\r\n";
@@ -48,13 +63,26 @@ exports.setupMessageDVBT = function(options,cb){
 exports.setupMessageDVBS = function(options,cb){
 
     var msgOut = new String();
-    msgOut += "SETUP rtsp://"+options.externServer+":"+options.serverPort+"/?src="+options.src;
-    if(options.fe !== undefined){msgOut += "&fe="+options.fe;}
-    msgOut +="&freq="+options.freq+"&msys="+options.msys+"&plts="+options.plts;
-    if(options.fec !== undefined){msgOut += "&fec="+options.fec;}
-    msgOut += "&pol="+options.pol+"&ro="+options.ro;
-    if(options.sr !== undefined){msgOut += "&sr="+options.sr;}
-    if(options.mtype !== undefined){msgOut += "&mtype="}//+options.mtype}
+    msgOut += "SETUP rtsp://"+options.externServer+":"+options.serverPort;
+    if(options.commands){
+        msgOut += options.comanda
+    }else {
+        msgOut += "/?src=" + options.src;
+        if (options.fe !== undefined) {
+            msgOut += "&fe=" + options.fe;
+        }
+        msgOut += "&freq=" + options.freq + "&msys=" + options.msys + "&plts=" + options.plts;
+        if (options.fec !== undefined) {
+            msgOut += "&fec=" + options.fec;
+        }
+        msgOut += "&pol=" + options.pol + "&ro=" + options.ro;
+        if (options.sr !== undefined) {
+            msgOut += "&sr=" + options.sr;
+        }
+        if (options.mtype !== undefined) {
+            msgOut += "&mtype="
+        }//+options.mtype}
+    }
     msgOut += "&pids=0";
     msgOut += " RTSP/1.0\r\n";
     msgOut += "CSeq: "+options.Cseq+"\r\n";

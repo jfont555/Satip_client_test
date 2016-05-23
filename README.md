@@ -1,32 +1,28 @@
 # Satip_client_test
 SAT>IP client for test rtsp communication with SAT>IP server.
 
-How to:
+How to install:
 
-satips=(server IP):(Server Port/Default 554) [args]
+Download the project
 
-List of arguments:
+install dependencies with:
 
-freq=
-fe=
-src=
-pol=
-ro=
-msys=
-sr=
-fec=
-pids=
-mtype=
-bw=
-tmode=
-gi=
+npm install
 
-(eg: node index.js satips=192.168.1.2:554 freq=12727 pids=501,502,18 msys=dvbs pol=h sr=22000 fec=89 -p 52050-52051 -d 192.168.1.100)
+Use it like other node tools
 
--p Unicast RTP/RTCP port pair (eg: 52000-52001)
+How to use it:
 
--m Boolean to indicate multicast
+satips=(server IP):(Server Port/Default 554) cmd="?freq=1234&msys=dvbs&fec=89&pids=504,234,0,12 ..." dst=(Client for the stream):(client port)
 
--d Destination IP to send stream
+-m --multicast: Boolean to indicate multicast
 
--ttl time multicast
+-t --ttl: time to live for multicast
+
+-c --Commands: Force to construct the rtsp message without parsing arguments. Message will be constructed with string under double mark.
+
+-d --debug: Show options parsed
+
+-i --info: show some info
+
+--help: All available args
