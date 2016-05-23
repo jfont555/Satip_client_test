@@ -19,7 +19,7 @@ exports.setupMessageDVBT = function(options,cb){
     var msgOut = new String();
     msgOut += "SETUP rtsp://"+options.externServer+":"+options.serverPort;
     if(options.commands){
-        msgOut += options.comanda
+        msgOut += "/"+options.comanda
     }else {
         msgOut += "/?freq=" + options.freq;
         if (options.bw !== undefined) {
@@ -65,7 +65,7 @@ exports.setupMessageDVBS = function(options,cb){
     var msgOut = new String();
     msgOut += "SETUP rtsp://"+options.externServer+":"+options.serverPort;
     if(options.commands){
-        msgOut += options.comanda
+        msgOut += "/"+options.comanda
     }else {
         msgOut += "/?src=" + options.src;
         if (options.fe !== undefined) {
