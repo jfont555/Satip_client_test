@@ -12,6 +12,7 @@ var udpf = require('./udp_forward');
 console.log("\nInit SAT>IP RTSP-Client test\n\n\n");
 logger.debug({timestamp: Date.now()}, "Init SAT>IP RTSP-Client test");
 
+
 var RTSPClient = function(Options) {
 
     var Client = new net.Socket();
@@ -70,20 +71,12 @@ var RTSPClient = function(Options) {
         }
         if(State == 2 && udpActive == false && !Options.multicast){
             var destinationPorts = Options.clientports.split(/-/);
-            /*if(options.save){
-                net.createServer(function(socket) {
+            var clientDestination = Options.destinationPorts.split(/-/);
 
+                var udp1 = udpf.createUdpforward(Options.destination, destinationPorts[0], clientDestination[0]);//Modificar ports a els reservats pel servidor
+                var udp2 = udpf.createUdpforward(Options.destination, destinationPorts[1], clientDestination[1]);
+                console.log(destinationPorts[0]+"--"+clientDestination[0]);
 
-                    var fs = require('fs');
-                    fs.writeFile('file.mp4', function (err) {
-                        if (err) throw err;
-                        console.log('It s saved');
-                    })
-                }).listen(destinationPorts[0],'127.0.0.1');
-            }else {*/
-                var udp1 = udpf.createUdpforward(Options.destination, destinationPorts[0], destinationPorts[0]);//Modificar ports a els reservats pel servidor
-                var udp2 = udpf.createUdpforward(Options.destination, destinationPorts[1], destinationPorts[1]);
-            //}
             udpActive = true;
         }
     });

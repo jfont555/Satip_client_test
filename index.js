@@ -28,6 +28,11 @@ var  optionss= stdio.getopt({
         description: 'Use command specified without parsing it',
         args: 0
     },
+    'Port' :{
+        key: 'p',
+        description: 'RTP port to be used by client, note that port+1 is used too',
+        args: 0
+    },
     'info': {
         description: 'Available parameters:\n satips=SERVER_IP:SERVER_PORT\n cmd="All_Parameters(eg:?freq=1234&msys=dvbs&fec=89"\n' +
         ' dst=DESTINATION_IP:CLIENT_PORT (PORT TO SEND UDP traffic)'
@@ -75,6 +80,11 @@ if(process.argv.toString().match(/satips=/) && process.argv.toString().match(/cm
                         process.exit();
                     }if(destinationIP[1] !== undefined){
                         options.clientports = destinationIP[1]+"-"+(parseInt(destinationIP[1])+1);
+                        if(optionss.port !== undefined){
+                            options.destinationPorts = optionss.port+"-"+(parseInt(optionss.port+1));
+                        }else{
+                            options.destinationPorts = (parseInt(destinationIP[1])+2)+"-"+(parseInt(destinationIP[1])+3);
+                        }
                     }
                     break;
 
