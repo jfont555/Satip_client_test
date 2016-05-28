@@ -49,12 +49,12 @@ exports.setupMessageDVBT = function(options,cb){
     if(options.multicast) {
         msgOut += "multicast;";
         msgOut += "destination="+options.destination;
-        var ports = options.clientports.split(/-/);
+        var ports = options.destinationPorts.split(/-/);
         msgOut += "port="+ports[0]+";port="+ports[1];
     }
     else{
         msgOut += "unicast;";
-        msgOut += "client_port:"+options.clientports;
+        msgOut += "client_port:"+options.destinationPorts;
     }
    //  msgOut +="\r\n";
     msgOut += "\r\n";
@@ -97,14 +97,14 @@ exports.setupMessageDVBS = function(options,cb){
             msgOut += "destination="+options.destination+";";
         }
         if(options.ttl == undefined) {
-            msgOut += "port=" + options.clientports + "\r\n";
+            msgOut += "port=" + options.destinationPorts + "\r\n";
         }else{
-            msgOut += "port=" + options.clientports +";ttl="+options.ttl+ "\r\n";
+            msgOut += "port=" + options.destinationPorts +";ttl="+options.ttl+ "\r\n";
         }
     }
     else{
         msgOut += "unicast;";
-        msgOut += "client_port="+options.clientports+"\r\n";
+        msgOut += "client_port="+options.destinationPorts+"\r\n";
     }
     msgOut += "\r\n";
     cb(msgOut);
