@@ -48,37 +48,34 @@ function Init(cb) {
         serverPort: '554',
         Cseq: '1'
     };
+    var loggerOptions = {
+        colorize: true
+    }
 
+    logger.remove(logger.transports.Console);
     logger.add(logger.transports.File, {filename: 'logFile.log'});
 
-    var colors = {
-        error: 'red',
-        warn: 'yellow',
-        info: 'green',
-        verbose: 'brown',
-        debug: 'blue'
-    };
-
-    logger.addColors(colors);
-
-
+    // Check if contains at least 3 important options to execute client
     if (process.argv.toString().match(/satips=/) && process.argv.toString().match(/cmd=/) && process.argv.toString().match(/dst=/)) {
 
-        if (optionss.verbosity) {
+        if (optionss.verbosity) { // Set logger levels
             if (optionss.verbosity == 0) {
-                logger.transports.Console.level = 'warn';
+                loggerOptions.level = 'warn';
             } else if (optionss.verbosity == 1) {
-                logger.transports.Console.level = 'info';
+                loggerOptions.level = 'info';
             } else if (optionss.verbosity == 2) {
-                logger.transports.Console.level = 'debug';
+                loggerOptions.level = 'debug';
             } else {
             }
+            logger.add(logger.transports.Console, loggerOptions);
         } else {
-            logger.transports.Console.level = 'error'
+            loggerOptions.level = 'error'
+            logger.add(logger.transports.Console, loggerOptions);
+
         }
         options.logger = logger;
 
-        process.argv.forEach(function (val) {
+        process.argv.forEach(function (val) { // Parse all the arguments, also args in cmd string
             if (val !== undefined) {
                 var arrayAux = val.split(/=/);
 
@@ -98,7 +95,7 @@ function Init(cb) {
                             options.serverPort = 554;
                         }
                         break;
-                    case 'dst':
+                    case 'dst': // Check destination IP & port, Also assign base port
                         var destinationIP = arrayAux[1].split(/:/);
                         if (destinationIP[0] !== undefined) {
                             options.destination = destinationIP[0];
@@ -116,7 +113,7 @@ function Init(cb) {
                         }
                         break;
 
-                    case 'cmd':
+                    case 'cmd': //Parse 'cmd=' arguments and assign to var
                         if (val.split(/=/)[1].match(/\?/)) {
                             var comanda = val.slice(5).split(/&/);
                         } else {
