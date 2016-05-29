@@ -1,9 +1,8 @@
 /**
  * Created by jfont on 01/05/16.
  */
-var logger = require('./node_modules/logger/logger.js').createLogger('udp.log'); ;
 
-var UdProxy = function(toAddress, toPort, localPort) {
+var UdProxy = function(toAddress, toPort, localPort,logger) {
     this.toAddress = toAddress;
     this.toPort = toPort;
     this.localPort = localPort;
@@ -16,19 +15,25 @@ var UdProxy = function(toAddress, toPort, localPort) {
             port: this.toPort,
             localaddress: '0.0.0.0',
             localport: this.localPort,
-            timeOutTime: 1000
+            timeOutTime: 5000
         };
 // This is the function that creates the server, each connection is handled internally
     var server = proxy.createServer(options);
+    var traffic = false;
+
+    function traficCheck() {
+        if (traffic){
+            logger.info("UDP proxy is sending data...");
+            traffic = false;
+            }
+        }
 
 
 // this should be obvious
     server.on('listening', function (details) {
-        logger.debug({timestamp: Date.now()}, 'udp-proxy-server ready on', details.server.family + '  ' + details.server.address + ':' + details.server.port);
-        logger.debug({timestamp: Date.now()}, 'traffic is forwarded to ' + details.target.family + '  ' + details.target.address + ':' + details.target.port);
-
-        //console.log('\n\nudp-proxy-server ready on ' + details.server.family + '  ' + details.server.address + ':' + details.server.port);
-        console.log('traffic is forwarded to ' + details.target.family + '  ' + details.target.address + ':' + details.target.port+"\n\n");
+        logger.info('Listening on: ', details.server.family + '  ' + details.server.address + ':' + details.server.port);
+        logger.info('traffic is forwarded to ' + details.target.family + '  ' + details.target.address + ':' + details.target.port);
+        setInterval(traficCheck, 10*1000);
     });
 
 // 'bound' means the connection to server has been made and the proxying is in action
@@ -39,6 +44,7 @@ var UdProxy = function(toAddress, toPort, localPort) {
 
 // 'message' is emitted when the server gets a message
     server.on('message', function (message, sender) {
+        traffic = true;
         //console.log('message from ' + sender.address + ':' + sender.port);
     });
 
@@ -53,15 +59,13 @@ var UdProxy = function(toAddress, toPort, localPort) {
     });
 
     server.on('proxyError', function (err) {
-        console.log('ProxyError! ' + err);
-        logger.debug({timestamp: Date.now()}, 'ProxyError! ' + err);
+        logger.error('ProxyError! ' + err);
     });
 
     server.on('error', function (err) {
-        console.log('Error! ' + err);
-        logger.debug({timestamp: Date.now()}, 'Error! ' + err);
+        logger.error('Error! ' + err);
     });
 }
-exports.createUdpforward= function (toAddress, toPort, localPort) {
-    return new UdProxy(toAddress, toPort, localPort);
+exports.createUdpforward= function (toAddress, toPort, localPort, logger) {
+    return new UdProxy(toAddress, toPort, localPort, logger);
 };

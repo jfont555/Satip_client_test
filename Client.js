@@ -2,28 +2,28 @@
  * Created by jfont on 16/04/16.
  */
 var net = require('net');
-var logger = require('./node_modules/logger/logger.js').createLogger('development.log'); ;
 var messages = require('./messages_lib.js');
 var regularUtils = require('./regularExp.js').regularExp;
 var sleep = require('sleep');
 var udpf = require('./udp_forward');
 
 
-console.log("\nInit SAT>IP RTSP-Client test\n\n\n");
-logger.debug({timestamp: Date.now()}, "Init SAT>IP RTSP-Client test");
 
 
 var RTSPClient = function(Options) {
+
+    console.log("\n\n\n");
+    Options.logger.info("Init SAT>IP RTSP-Client test\n\n");
 
     var Client = new net.Socket();
     var State = 0; // State 0 = Initial; 1 = Setup; 2 = Play; 3 = Teardown
     var udpActive = false;
 
     Client.connect(Options.serverPort, Options.externServer, function () {
-        logger.debug({timestamp: Date.now()}, "Conncetion to server established");
-        console.log("Connected to: "+Options.externServer);
+        Options.logger.info("Connection to server established");
+        Options.logger.info("Connected to: "+Options.externServer);
         messages.optionsMessage(Options, function (messageOptions){
-            console.log("\n>>>\nClient Message:\n"+messageOptions+">>>");
+            Options.logger.debug(">>>Client Message:\n"+messageOptions+">>>");
             Client.write(messageOptions);
             State = 0;
             Options.Cseq++;
@@ -31,12 +31,14 @@ var RTSPClient = function(Options) {
     });
 
     Client.on('data', function (data) {
-        console.log("\n<<<\nServer Response:\n"+data.toString()+"<<<");
+        Options.logger.info("Response from server\n");
+        Options.logger.debug("\n<<<\nServer Response:\n"+data.toString()+"<<<");
 
         if(State == 0) {
             if (Options.msys === 'dvbt') {
                 messages.setupMessageDVBT(Options, function (message) {
-                    console.log("\n>>>\nClient Message:\n"+message + ">>>")
+                    Options.logger.info("SETUP DVBT\n");
+                    Options.logger.debug(">>>\nClient Message:\n"+message + ">>>")
                     Client.write(message);
                     Options.Cseq++;
                     State = 5;
@@ -45,7 +47,8 @@ var RTSPClient = function(Options) {
             else if (Options.msys === 'dvbs' || Options.msys === 'dvbs2') {
                 messages.setupMessageDVBS(Options, function (messageSETUP) {
                     sleep.sleep(1);
-                    console.log("\n>>>\nClient Message:\n"+messageSETUP + ">>>");
+                    Options.logger.info("SETUP DVBS/DVBS2\n");
+                    Options.logger.debug(">>>\nClient Message:\n"+messageSETUP + ">>>");
                     Client.write(messageSETUP);
                     Options.Cseq++;
                     State = 5;
@@ -64,7 +67,8 @@ var RTSPClient = function(Options) {
         }
         if(State == 5 && Options.session !== undefined){
             messages.playAddpids(Options, function(messagePlayAdd){
-               console.log("\n>>>\nClient Message:\n"+messagePlayAdd+">>>");
+                Options.logger.info("PLAY\n");
+                Options.logger.debug(">>>\nClient Message:\n"+messagePlayAdd+">>>");
                 Client.write(messagePlayAdd);
                 State = 2;
             });
@@ -73,9 +77,8 @@ var RTSPClient = function(Options) {
             var destinationPorts = Options.clientports.split(/-/);
             var clientDestination = Options.destinationPorts.split(/-/);
 
-                var udp1 = udpf.createUdpforward(Options.destination, destinationPorts[0], clientDestination[0]);//Modificar ports a els reservats pel servidor
-                var udp2 = udpf.createUdpforward(Options.destination, destinationPorts[1], clientDestination[1]);
-                console.log(destinationPorts[0]+"--"+clientDestination[0]);
+                var udp1 = udpf.createUdpforward(Options.destination, destinationPorts[0], clientDestination[0],Options.logger);//Modificar ports a els reservats pel servidor
+                var udp2 = udpf.createUdpforward(Options.destination, destinationPorts[1], clientDestination[1],Options.logger);
 
             udpActive = true;
         }
@@ -85,13 +88,12 @@ var RTSPClient = function(Options) {
 
     });
     Client.on('close', function(){
-        console.log('Connection closed');
+        Options.logger.info('Connection closed');
         process.exit();
     });
 
     Client.on('error', function(e){
-        console.log('Connection Error');
-        console.log(e);
+        Options.logger.error('Connection Error');
         process.exit();
     });
 
@@ -99,7 +101,8 @@ var RTSPClient = function(Options) {
         if (State == 2 && Options.session !== undefined){
             Options.Cseq++;
             messages.optionsMessage(Options, function(messageOpt){
-                console.log("\n>>>\nClient Message:\n"+messageOpt+">>>");
+                Options.logger.info("OPTIONS ( Maintain Connection )\n");
+                Options.logger.debug(">>>\nClient Message:\n"+messageOpt+">>>");
                 Client.write(messageOpt);
             })
         }
@@ -107,12 +110,12 @@ var RTSPClient = function(Options) {
     setInterval(connectionMant, 20*1000);
 
     process.on('SIGINT', function() {
-        console.log("Caught interrupt signal");
+        Options.logger.warn("Caught interrupt signal");
         if(Options.session !== undefined) {
             Options.Cseq++;
             messages.teardownMessage(Options, function (message) {
                 Client.write(message);
-                console.log(message);
+                Options.logger.debug(message);
                 State = 3;
             });
         }

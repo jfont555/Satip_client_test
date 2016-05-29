@@ -8,11 +8,11 @@
     "url": "https://github.com/jfont555/Satip_client_test"
   },
   "dependencies":{
-    "sleep": ">=3.0.1",
     "logger": ">=0.0.1",
     "stdio":">=0.2.7",
     "verbal-expressions":">=0.2.1",
-    "udp-proxy": ">=1.0.1"
+    "udp-proxy": ">=1.0.1",
+    "winston": ">=0.9.0"
   },
   "licences":[
     {

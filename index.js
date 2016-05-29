@@ -4,17 +4,17 @@
 var Client = require('./Client.js');
 var stdio = require('stdio');
 var VerEx = require('verbal-expressions');
+var logger = require('winston');
 
-
-var  optionss= stdio.getopt({
+var optionss = stdio.getopt({
     'multicast': {
         key: 'm',
         description: 'Multicast',
         args: 0
     },
-    'debug': {
-        key: 'd',
-        description: 'Show parsed Options',
+    'verbosity': {
+        key: 'v',
+        description: 'Verbosity level, error: 0, verbose: 1, debug: 2',
         args: 1
     },
     'ttl': {
@@ -22,38 +22,65 @@ var  optionss= stdio.getopt({
         description: 'Time multicast',
         args: 1
     },
-    'Commands' :{
+    'Commands': {
         key: 'c',
         description: 'Use command specified without parsing it',
         args: 0
     },
-    'Port' :{
+    'Port': {
         key: 'p',
-        description: 'RTP port to be used by client, note that port+1 is used too',
-        args: 0
+        description: 'RTP port to be used by client, note that port+1 is used too. If is not defined destination port+2 will be used',
+        args: 1
     },
     'info': {
-        description: 'Available parameters:\n satips=SERVER_IP:SERVER_PORT\n cmd="All_Parameters(eg:?freq=1234&msys=dvbs&fec=89"\n' +
-        ' dst=DESTINATION_IP:CLIENT_PORT (PORT TO SEND UDP traffic)'
+        description: 'Available parameters:\n\n                                satips=SERVER_IP:SERVER_PORT' +
+        '\n\n                                cmd="All_Parameters(eg:?freq=1234&msys=dvbs&fec=89"' +
+        '\n\n                                dst=DESTINATION_IP:CLIENT_PORT (PORT TO SEND RTP traffic)\n\n'
     }
 });
-
-var options = { //According to satip specification (pag.43 update 8th jan 2015), this should be the default values for client queries.
-    src:'1',
-    ro: '0.35',
-    mtype: 'qpsk',
-    plts: 'off',
-    serverPort: '554',
-    Cseq : '1'
-};
-
 function Init(cb) {
+
+    var options = { //According to satip specification (pag.43 update 8th jan 2015), this should be the default values for client queries.
+        src: '1',
+        ro: '0.35',
+        mtype: 'qpsk',
+        plts: 'off',
+        serverPort: '554',
+        Cseq: '1'
+    };
+
+    logger.add(logger.transports.File, {filename: 'logFile.log'});
+
+    var colors = {
+        error: 'red',
+        warn: 'yellow',
+        info: 'green',
+        verbose: 'brown',
+        debug: 'blue'
+    };
+
+    logger.addColors(colors);
+
+
     if (process.argv.toString().match(/satips=/) && process.argv.toString().match(/cmd=/) && process.argv.toString().match(/dst=/)) {
+
+        if (optionss.verbosity) {
+            if (optionss.verbosity == 0) {
+                logger.transports.Console.level = 'warn';
+            } else if (optionss.verbosity == 1) {
+                logger.transports.Console.level = 'info';
+            } else if (optionss.verbosity == 2) {
+                logger.transports.Console.level = 'debug';
+            } else {
+            }
+        } else {
+            logger.transports.Console.level = 'error'
+        }
+        options.logger = logger;
 
         process.argv.forEach(function (val) {
             if (val !== undefined) {
                 var arrayAux = val.split(/=/);
-                console.log(arrayAux[0]);
 
                 switch (arrayAux[0]) {
                     case 'satips':
@@ -65,7 +92,6 @@ function Init(cb) {
                         else {
                             options.externServer = '127.0.0.1';
                         }
-                        console.log("\nServer: " + options.externServer + ":" + options.serverPort);
                         if (serverIp[1] !== undefined) {
                             options.serverPort = serverIp[1];
                         } else {
@@ -77,13 +103,13 @@ function Init(cb) {
                         if (destinationIP[0] !== undefined) {
                             options.destination = destinationIP[0];
                         } else {
-                            console.log('ERROR Missing destination\n');
+                            options.logger.error('ERROR Missing destination\n');
                             process.exit();
                         }
                         if (destinationIP[1] !== undefined) {
                             options.clientports = destinationIP[1] + "-" + (parseInt(destinationIP[1]) + 1);
-                            if (optionss.port !== undefined) {
-                                options.destinationPorts = optionss.port + "-" + (parseInt(optionss.port + 1));
+                            if (optionss.Port !== undefined) {
+                                options.destinationPorts = optionss.Port + "-" + (parseInt(optionss.Port) + 1);
                             } else {
                                 options.destinationPorts = (parseInt(destinationIP[1]) + 2) + "-" + (parseInt(destinationIP[1]) + 3);
                             }
@@ -151,14 +177,11 @@ function Init(cb) {
                         break;
                 }
             } else {
-                console.log("Wrong parameters!\n");
+                options.logger.error("Wrong parameters!\n");
                 process.exit();
             }
         });
 
-        console.log(options);
-
-        console.log("\n### SATIPC Tool ###\n");
 
         if (optionss.multicast) {
             options.multicast = true;
@@ -173,12 +196,12 @@ function Init(cb) {
         }
         cb(options);
     } else {
-        console.log("Wrong parameters!\n");
+        options.logger.error("Wrong parameters!\n");
         process.exit();
     }
 }
 
-Init(function(initParameters){
+Init(function (initParameters) {
     Client.CreateRTSPClient(initParameters);
 });
 
