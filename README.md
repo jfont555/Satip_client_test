@@ -1,4 +1,5 @@
-# Satip_client_test
+# Satip-client
+
 ###SAT>IP client for test rtsp communication with SAT>IP server.
 
 **How to install:**
@@ -23,8 +24,23 @@ satips=(server IP):(Server Port/Default 554) cmd="?freq=1234&msys=dvbs&fec=89&pi
 
 -c --Commands: Force to construct the rtsp message without parsing arguments. Message will be constructed with string under double mark.
 
--d --debug: Show options parsed
-
 -i --info: show some info
 
+-v --verbosity: Verbosity level, error: 0, verbose: 1, debug: 2. Usage: -v {number}
+
 --help: All available args
+
+**Examples**
+
+    node index.js satips=192.168.1.30:554 cmd="?src=1&freq=11347&pol=v&ro=0.35&msys=dvbs2&mtype=8psk&plts=on&sr=22000&fec=23&pids=0,17,18,6600,6610,6620,6630" dst=192.168.1.32:12345
+
+
+*Play with:*
+
+TReader: RTPUnicast/12345
+VLC: rtp://192.168.1.32:12345
+
+
+
+**TO-DO**
+
