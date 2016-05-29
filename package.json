@@ -8,11 +8,11 @@
     "url": "https://github.com/jfont555/Satip_client_test"
   },
   "dependencies":{
-    "sleep": "3.0.1",
-    "logger": "0.0.1",
-    "secret-module":"git://github.com/sandy98/node-simple-router.git",
-    "stdio":"0.2.7",
-    "verbal.expressions":"0.2.1"
+    "sleep": ">=3.0.1",
+    "logger": ">=0.0.1",
+    "stdio":">=0.2.7",
+    "verbal-expressions":">=0.2.1",
+    "udp-proxy": ">=1.0.1"
   },
   "licences":[
     {
