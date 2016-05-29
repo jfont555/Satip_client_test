@@ -1,17 +1,19 @@
 # Satip_client_test
-SAT>IP client for test rtsp communication with SAT>IP server.
+###SAT>IP client for test rtsp communication with SAT>IP server.
 
-How to install:
+**How to install:**
 
-Download the project
+From Source:
 
-install dependencies with:
+    git clone https://github.com/jfont555/satip-client
 
-npm install
+Install dependencies with:
+
+    npm install
 
 Use it like other node tools
 
-How to use it:
+**How to use it:**
 
 satips=(server IP):(Server Port/Default 554) cmd="?freq=1234&msys=dvbs&fec=89&pids=504,234,0,12 ..." dst=(Client for the stream):(client port)
 
