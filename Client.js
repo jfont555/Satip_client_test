@@ -4,7 +4,6 @@
 var net = require('net');
 var messages = require('./messages_lib.js');
 var regularUtils = require('./regularExp.js').regularExp;
-var sleep = require('sleep');
 var udpf = require('./udp_forward');
 
 
@@ -46,7 +45,6 @@ var RTSPClient = function(Options) {
             }
             else if (Options.msys === 'dvbs' || Options.msys === 'dvbs2') {
                 messages.setupMessageDVBS(Options, function (messageSETUP) {
-                    sleep.sleep(1);
                     Options.logger.info("SETUP DVBS/DVBS2\n");
                     Options.logger.debug(">>>\nClient Message:\n"+messageSETUP + ">>>");
                     Client.write(messageSETUP);
