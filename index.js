@@ -53,7 +53,6 @@ function Init(cb) {
     }
 
     logger.remove(logger.transports.Console);
-    logger.add(logger.transports.File, {filename: 'logFile.log'});
 
     // Check if contains at least 3 important options to execute client
     if (process.argv.toString().match(/satips=/) && process.argv.toString().match(/cmd=/) && process.argv.toString().match(/dst=/)) {
@@ -71,8 +70,10 @@ function Init(cb) {
         } else {
             loggerOptions.level = 'error'
             logger.add(logger.transports.Console, loggerOptions);
-
         }
+        loggerOptions.filename = 'logFile.log'
+        logger.add(logger.transports.File, loggerOptions);
+
         options.logger = logger;
 
         process.argv.forEach(function (val) { // Parse all the arguments, also args in cmd string
