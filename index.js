@@ -3,7 +3,6 @@
  */
 var Client = require('./Client.js');
 var stdio = require('stdio');
-var sleep = require('sleep');
 var VerEx = require('verbal-expressions');
 
 
@@ -46,134 +45,140 @@ var options = { //According to satip specification (pag.43 update 8th jan 2015),
     plts: 'off',
     serverPort: '554',
     Cseq : '1'
-}
-if(process.argv.toString().match(/satips=/) && process.argv.toString().match(/cmd=/) && process.argv.toString().match(/dst=/)) {
+};
 
-    process.argv.forEach(function (val) {
-        if (val !== undefined) {
-            var arrayAux = val.split(/=/);
-            console.log(arrayAux[0]);
+function Init(cb) {
+    if (process.argv.toString().match(/satips=/) && process.argv.toString().match(/cmd=/) && process.argv.toString().match(/dst=/)) {
 
-            switch (arrayAux[0]) {
-                case 'satips':
-                    options.protocolType = 'satips';
-                    var serverIp = arrayAux[1].split(/:/);
-                    if (serverIp[0] !== undefined) {
-                        options.externServer = serverIp[0];
-                    }
-                    else {
-                        options.externServer = '127.0.0.1';
-                    }
-                    console.log("\nServer: " + options.externServer + ":" + options.serverPort);
-                    if (serverIp[1] !== undefined) {
-                        options.serverPort = serverIp[1];
-                    } else {
-                        options.serverPort = 554;
-                    }
-                    break;
-                case 'dst':
-                    var destinationIP = arrayAux[1].split(/:/);
-                    if(destinationIP[0] !== undefined) {
-                        options.destination = destinationIP[0];
-                    }else{
-                        console.log('ERROR Missing destination\n');
-                        process.exit();
-                    }if(destinationIP[1] !== undefined){
-                        options.clientports = destinationIP[1]+"-"+(parseInt(destinationIP[1])+1);
-                        if(optionss.port !== undefined){
-                            options.destinationPorts = optionss.port+"-"+(parseInt(optionss.port+1));
-                        }else{
-                            options.destinationPorts = (parseInt(destinationIP[1])+2)+"-"+(parseInt(destinationIP[1])+3);
+        process.argv.forEach(function (val) {
+            if (val !== undefined) {
+                var arrayAux = val.split(/=/);
+                console.log(arrayAux[0]);
+
+                switch (arrayAux[0]) {
+                    case 'satips':
+                        options.protocolType = 'satips';
+                        var serverIp = arrayAux[1].split(/:/);
+                        if (serverIp[0] !== undefined) {
+                            options.externServer = serverIp[0];
                         }
-                    }
-                    break;
-
-                case 'cmd':
-                    if (val.split(/=/)[1].match(/\?/)) {
-                        var comanda = val.slice(5).split(/&/);
-                    } else {
-                        var comanda = val.slice(4).split(/%/);
-                    }
-                    options.comanda = VerEx().find(/&pids=[\d*,*]*/).replace(val.slice(4),"");
-                    comanda.forEach(function (val) {
-                        var individual = val.split(/=/);
-
-                        switch (individual[0]) {
-
-                            case 'freq':
-                                options.freq = individual[1];
-                                break;
-                            case 'fe':
-                                options.fe = individual[1];
-                                break;
-                            case 'src':
-                                options.src = individual[1];
-                                break;
-                            case 'pol':
-                                options.pol = individual[1];
-                                break;
-                            case 'ro':
-                                options.ro = individual[1];
-                                break;
-                            case 'msys':
-                                options.msys = individual[1];
-                                break;
-                            case 'sr':
-                                options.sr = individual[1];
-                                break;
-                            case 'fec':
-                                options.fec = individual[1];
-                                break;
-                            case 'pids':
-                                options.pids = individual[1];
-                                break;
-                            case 'mtype':
-                                options.mtype = individual[1];
-                                break;
-                            case 'plts':
-                                options.plts = individual[1];
-                                break;
-
-                            case 'bw':
-                                options.bw = individual[1];
-                                break;
-                            case 'tmode':
-                                options.tmode = individual[1];
-                                break;
-                            case 'gi':
-                                options.gi = individual[1];
-                                break;
-
+                        else {
+                            options.externServer = '127.0.0.1';
                         }
-                    });
-                    break;
+                        console.log("\nServer: " + options.externServer + ":" + options.serverPort);
+                        if (serverIp[1] !== undefined) {
+                            options.serverPort = serverIp[1];
+                        } else {
+                            options.serverPort = 554;
+                        }
+                        break;
+                    case 'dst':
+                        var destinationIP = arrayAux[1].split(/:/);
+                        if (destinationIP[0] !== undefined) {
+                            options.destination = destinationIP[0];
+                        } else {
+                            console.log('ERROR Missing destination\n');
+                            process.exit();
+                        }
+                        if (destinationIP[1] !== undefined) {
+                            options.clientports = destinationIP[1] + "-" + (parseInt(destinationIP[1]) + 1);
+                            if (optionss.port !== undefined) {
+                                options.destinationPorts = optionss.port + "-" + (parseInt(optionss.port + 1));
+                            } else {
+                                options.destinationPorts = (parseInt(destinationIP[1]) + 2) + "-" + (parseInt(destinationIP[1]) + 3);
+                            }
+                        }
+                        break;
+
+                    case 'cmd':
+                        if (val.split(/=/)[1].match(/\?/)) {
+                            var comanda = val.slice(5).split(/&/);
+                        } else {
+                            var comanda = val.slice(4).split(/%/);
+                        }
+                        options.comanda = VerEx().find(/&pids=[\d*,*]*/).replace(val.slice(4), "");
+                        comanda.forEach(function (val) {
+                            var individual = val.split(/=/);
+
+                            switch (individual[0]) {
+
+                                case 'freq':
+                                    options.freq = individual[1];
+                                    break;
+                                case 'fe':
+                                    options.fe = individual[1];
+                                    break;
+                                case 'src':
+                                    options.src = individual[1];
+                                    break;
+                                case 'pol':
+                                    options.pol = individual[1];
+                                    break;
+                                case 'ro':
+                                    options.ro = individual[1];
+                                    break;
+                                case 'msys':
+                                    options.msys = individual[1];
+                                    break;
+                                case 'sr':
+                                    options.sr = individual[1];
+                                    break;
+                                case 'fec':
+                                    options.fec = individual[1];
+                                    break;
+                                case 'pids':
+                                    options.pids = individual[1];
+                                    break;
+                                case 'mtype':
+                                    options.mtype = individual[1];
+                                    break;
+                                case 'plts':
+                                    options.plts = individual[1];
+                                    break;
+
+                                case 'bw':
+                                    options.bw = individual[1];
+                                    break;
+                                case 'tmode':
+                                    options.tmode = individual[1];
+                                    break;
+                                case 'gi':
+                                    options.gi = individual[1];
+                                    break;
+
+                            }
+                        });
+                        break;
+                }
+            } else {
+                console.log("Wrong parameters!\n");
+                process.exit();
             }
+        });
+
+        console.log(options);
+
+        console.log("\n### SATIPC Tool ###\n");
+
+        if (optionss.multicast) {
+            options.multicast = true;
         } else {
-            console.log("Wrong parameters!\n");
-            process.exit();
+            options.multicast = false;
         }
-    });
-
-    console.log(options)
-
-    console.log("\n### SATIPC Tool ###\n");
-
-    if (optionss.multicast) {
-        options.multicast = true;
+        options.port = optionss.port;
+        if (optionss.Commands) {
+            options.commands = true;
+        } else {
+            options.commands = false;
+        }
+        cb(options);
     } else {
-        options.multicast = false;
+        console.log("Wrong parameters!\n");
+        process.exit();
     }
-    options.port = optionss.port;
-    if (optionss.Commands) {
-        options.commands = true;
-    } else {
-        options.commands = false;
-    }
-
-    sleep.sleep(2);
-    Client.CreateRTSPClient(options);
-}else{
-    console.log("Wrong parameters!\n");
-    process.exit();
 }
+
+Init(function(initParameters){
+    Client.CreateRTSPClient(initParameters);
+});
 
