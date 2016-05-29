@@ -2,7 +2,7 @@
 
 ###SAT>IP client for test rtsp communication with SAT>IP server.
 
-**How to install:**
+##How to install:##
 
 From Source:
 
@@ -14,7 +14,7 @@ Install dependencies with:
 
 Use it like other node tools
 
-**How to use it:**
+##How to use it:##
 
 satips=(server IP):(Server Port/Default 554) cmd="?freq=1234&msys=dvbs&fec=89&pids=504,234,0,12 ..." dst=(Client for the stream):(client port)
 
@@ -30,7 +30,7 @@ satips=(server IP):(Server Port/Default 554) cmd="?freq=1234&msys=dvbs&fec=89&pi
 
 **--help:** All available args
 
-**Examples**
+##Examples##
 
     node index.js satips=192.168.1.30:554 cmd="?src=1&freq=11347&pol=v&ro=0.35&msys=dvbs2&mtype=8psk&plts=on&sr=22000&fec=23&pids=0,17,18,6600,6610,6620,6630" dst=192.168.1.32:12345
 
@@ -43,5 +43,5 @@ satips=(server IP):(Server Port/Default 554) cmd="?freq=1234&msys=dvbs&fec=89&pi
 
 
 
-**TO-DO**
+##TO-DO##
 
