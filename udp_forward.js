@@ -20,13 +20,20 @@ var UdProxy = function(toAddress, toPort, localPort,logger) {
 // This is the function that creates the server, each connection is handled internally
     var server = proxy.createServer(options);
     var traffic = false;
+    var infoTraffic = false;
 
     function traficCheck() {
         if (traffic){
-            logger.info("UDP proxy is sending data...");
-            traffic = false;
+            if(!infoTraffic) {
+                logger.info("UDP proxy is sending data...");
+                infoTraffic = true;
+            }else {
+
+                logger.verbose("UDP proxy is sending data...");
+                traffic = false;
             }
         }
+    }
 
 
 // this should be obvious

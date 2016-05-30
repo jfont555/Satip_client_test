@@ -62,16 +62,16 @@ function Init(cb) {
 
         if (optionss.verbosity) { // Set logger levels
             if (optionss.verbosity == 0) {
-                loggerOptions.level = 'warn';
-            } else if (optionss.verbosity == 1) {
                 loggerOptions.level = 'info';
+            } else if (optionss.verbosity == 1) {
+                loggerOptions.level = 'verbose';
             } else if (optionss.verbosity == 2) {
                 loggerOptions.level = 'debug';
             } else {
             }
             logger.add(logger.transports.Console, loggerOptions);
         } else {
-            loggerOptions.level = 'error'
+            loggerOptions.level = 'info'
             logger.add(logger.transports.Console, loggerOptions);
         }
         loggerOptions.filename = 'logFile.log'

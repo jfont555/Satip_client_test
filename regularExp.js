@@ -22,4 +22,16 @@ regularExp.prototype.comStreamID = function (data) {
     var stream = data.toString().match(numStream);
     return stream.toString().slice(18);
 }
+
+regularExp.prototype.responseType = function (data){
+    var responseTypr = /200 OK/;
+    var response = data.toString().match(responseTypr);
+
+    if(response === undefined || response === null){
+        return false;
+    }else{
+        return true;
+    }
+}
+
 exports.regularExp = new regularExp();

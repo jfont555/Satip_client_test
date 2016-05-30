@@ -17,7 +17,7 @@ var RTSPClient = function(Options) {
 
     Client.connect(Options.serverPort, Options.externServer, function () {
         Options.logger.info("Connection to server established");
-        Options.logger.info("Connected to: "+Options.externServer);
+        Options.logger.verbose("Connected to: "+Options.externServer);
         messages.optionsMessage(Options, function (messageOptions){
             Options.logger.debug(">>>Client Message:\n"+messageOptions+">>>");
             Client.write(messageOptions);
@@ -27,13 +27,20 @@ var RTSPClient = function(Options) {
     });
 
     Client.on('data', function (data) {
-        Options.logger.info("Response from server\n");
+
+        var responseStatus = null;
+        responseStatus = regularUtils.responseType(data);
+        if(responseStatus == false) {
+            Options.logger.verbose("Response from server: Error code in response\n");
+        }else{
+            Options.logger.verbose("Response from server: 200 OK response\n");
+        }
         Options.logger.debug("\n<<<\nServer Response:\n"+data.toString()+"<<<");
 
         if(State == 0) {
             if (Options.msys === 'dvbt') {
                 messages.setupMessageDVBT(Options, function (message) {
-                    Options.logger.info("SETUP DVBT\n");
+                    Options.logger.verbose("SETUP DVBT\n");
                     Options.logger.debug(">>>\nClient Message:\n"+message + ">>>")
                     Client.write(message);
                     Options.Cseq++;
@@ -42,7 +49,7 @@ var RTSPClient = function(Options) {
             }
             else if (Options.msys === 'dvbs' || Options.msys === 'dvbs2') {
                 messages.setupMessageDVBS(Options, function (messageSETUP) {
-                    Options.logger.info("SETUP DVBS/DVBS2\n");
+                    Options.logger.verbose("SETUP DVBS/DVBS2\n");
                     Options.logger.debug(">>>\nClient Message:\n"+messageSETUP + ">>>");
                     Client.write(messageSETUP);
                     Options.Cseq++;
@@ -62,7 +69,7 @@ var RTSPClient = function(Options) {
         }
         if(State == 5 && Options.session !== undefined){
             messages.playAddpids(Options, function(messagePlayAdd){
-                Options.logger.info("PLAY\n");
+                Options.logger.verbose("PLAY\n");
                 Options.logger.debug(">>>\nClient Message:\n"+messagePlayAdd+">>>");
                 Client.write(messagePlayAdd);
                 State = 2;
@@ -71,7 +78,7 @@ var RTSPClient = function(Options) {
         if(State == 2 && udpActive == false && !Options.multicast){
             var destinationPorts = Options.clientports.split(/-/);
             var clientDestination = Options.destinationPorts.split(/-/);
-
+                Options.logger.verbose("Using Client ports: "+clientDestination[0]+"-"+clientDestination[1])
                 var udp1 = udpf.createUdpforward(Options.destination, destinationPorts[0], clientDestination[0],Options.logger);//Modificar ports a els reservats pel servidor
                 var udp2 = udpf.createUdpforward(Options.destination, destinationPorts[1], clientDestination[1],Options.logger);
 
@@ -96,7 +103,7 @@ var RTSPClient = function(Options) {
         if (State == 2 && Options.session !== undefined){
             Options.Cseq++;
             messages.optionsMessage(Options, function(messageOpt){
-                Options.logger.info("OPTIONS ( Maintain Connection )\n");
+                Options.logger.verbose("OPTIONS ( Maintain Connection )\n");
                 Options.logger.debug(">>>\nClient Message:\n"+messageOpt+">>>");
                 Client.write(messageOpt);
             })
