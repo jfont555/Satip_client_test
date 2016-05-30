@@ -50,10 +50,11 @@ There are some default parameters if are not specified: (User parameters overrid
 
 **VLC:** rtp://192.168.1.32:12345
 
-**Save Stream** Use 'dumprtp' tool (dvbstream paquet):
+**Save Stream** Use 'dumprtp' tool (dvbstream packet):
+
 put dst=127.0.0.1:12345
 
-and execut in a shell:
+Execute in a shell:
 
     dumprtp 127.0.0.1 12345 > capture.ts
 
