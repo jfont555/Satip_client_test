@@ -61,6 +61,10 @@ var RTSPClient = function(Options) {
                 messages.setupMessageGeneric(Options,function(messageGeneric){
                     Options.logger.verbose("SETUP Generic\n");
                     Options.logger.debug("\n>>>\nClient Message:\n"+messageGeneric);
+                    if(!Options.commands){
+                        Options.logger.error("If msys is not specified, commands flag should be used\n");
+                        process.exit();
+                    }
                     Client.write(messageGeneric);
                     Options.Cseq++;
                     State = 5;

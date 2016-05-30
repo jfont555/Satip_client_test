@@ -39,7 +39,11 @@ exports.setupMessageDVBT = function(options,cb){
             msgOut += "&fec=" + options.fec;
         }
     }
-    msgOut += "&pids=0";
+    if(options.pids === 'all') {
+        msgOut += "&pids=all"
+    }else {
+        msgOut += "&pids=0";
+    }
     msgOut += " RTSP/1.0\r\n";
     msgOut += "CSeq: "+options.Cseq+"\r\n";
     if(options.session !== undefined){
@@ -83,13 +87,16 @@ exports.setupMessageDVBS = function(options,cb){
             msgOut += "&mtype="
         }//+options.mtype}
     }
-    msgOut += "&pids=0";
+    if(options.pids === 'all') {
+        msgOut += "&pids=all"
+    }else {
+        msgOut += "&pids=0";
+    }
     msgOut += " RTSP/1.0\r\n";
     msgOut += "CSeq: "+options.Cseq+"\r\n";
     if(options.session !== undefined){
         msgOut += "Session: "+options.session+"\r\n";
     }
-    //msgOut += "Transport: RTP/AVP;unicast;client_port: "+options.clientports+"\r\n";
     msgOut += "Transport: RTP/AVP;";
     if(options.multicast) {
         msgOut += "multicast;";
@@ -118,7 +125,11 @@ exports.setupMessageGeneric = function(options,cb){
         msgOut += "/"+options.comanda
     }else {
     }
-    msgOut += "&pids=0";
+    if(options.pids === 'all') {
+        msgOut += "&pids=all"
+    }else {
+        msgOut += "&pids=0";
+    }
     msgOut += " RTSP/1.0\r\n";
     msgOut += "CSeq: "+options.Cseq+"\r\n";
     if(options.session !== undefined){
@@ -157,7 +168,7 @@ exports.teardownMessage =function(options,cb){
 exports.playAddpids = function(options,cb){
     var msgOut = new String();
     msgOut += "PLAY rtsp://"+options.externServer+"/stream="+options.stream;
-    if(options.pids !== undefined){msgOut+="?addpids="+options.pids;}
+    if(options.pids !== undefined && options.pids !== 'all'){msgOut+="?addpids="+options.pids;}
     msgOut +=" RTSP/1.0\r\n";
     msgOut += "Cseq: "+options.Cseq+"\r\n";
     if(options.session !== undefined) {

@@ -67,10 +67,12 @@ var UdProxy = function(toAddress, toPort, localPort,logger) {
 
     server.on('proxyError', function (err) {
         logger.error('ProxyError! ' + err);
+        process.exit();
     });
 
     server.on('error', function (err) {
         logger.error('Error! ' + err);
+        process.exit();
     });
 }
 exports.createUdpforward= function (toAddress, toPort, localPort, logger) {

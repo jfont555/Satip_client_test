@@ -124,7 +124,11 @@ function Init(cb) {
                         } else {
                             var comanda = val.slice(4).split(/%/);
                         }
-                        options.comanda = VerEx().find(/&pids=[\d*,*]*/).replace(val.slice(4), "");
+                        var comandaAux = VerEx().find(/&pids=[\d*,*]*/).replace(val.slice(4), "");
+                        comandaAux = VerEx().find(/all/).replace(comandaAux, "");
+                        comandaAux = VerEx().find(/&addpids=[\d*,*]*/).replace(comandaAux, "");
+                        options.comanda = VerEx().find(/all/).replace(comandaAux, "");
+
                         comanda.forEach(function (val) {
                             var individual = val.split(/=/);
 
@@ -155,6 +159,9 @@ function Init(cb) {
                                     options.fec = individual[1];
                                     break;
                                 case 'pids':
+                                    options.pids = individual[1];
+                                    break;
+                                case 'addpids':
                                     options.pids = individual[1];
                                     break;
                                 case 'mtype':
@@ -197,9 +204,9 @@ function Init(cb) {
         }
         if(!options.commands){
             if(options.msys == 'dvbt') {
-                options.logger.debug("Parameters Parsed: Freq=" + options.freq+" mtype="+options.mtype+" pids="+options.pids+" fe="+options.fe+" bw="+options.bw+" tmode="+options.tmode+" gi="+options.gi+"\n");
+                options.logger.debug("Parameters Parsed: Freq=" + options.freq+" src="+options.src+" mtype="+options.mtype+" pids="+options.pids+" fe="+options.fe+" bw="+options.bw+" tmode="+options.tmode+" gi="+options.gi+"\n");
             }else if (options.msys === 'dvbs' || options.msys === 'dvbs'){
-                options.logger.debug("Parameters Parsed: Freq=" + options.freq+" mtype="+options.mtype+" fe="+options.fe+" pids="+options.pids+" pol="+options.pol+" src="+options.src+" plts="+options.plts+" ro="+options.ro+" fec="+options.fec+"\n");
+                options.logger.debug("Parameters Parsed: Freq=" + options.freq+" src="+options.src+" mtype="+options.mtype+" fe="+options.fe+" pids="+options.pids+" pol="+options.pol+" src="+options.src+" plts="+options.plts+" ro="+options.ro+" fec="+options.fec+"\n");
             }
         }
         cb(options);
