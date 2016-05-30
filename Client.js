@@ -19,7 +19,7 @@ var RTSPClient = function(Options) {
         Options.logger.info("Connection to server established");
         Options.logger.verbose("Connected to: "+Options.externServer);
         messages.optionsMessage(Options, function (messageOptions){
-            Options.logger.debug(">>>Client Message:\n"+messageOptions+">>>");
+            Options.logger.debug(">>>Client Message:\n"+messageOptions.toString());
             Client.write(messageOptions);
             State = 0;
             Options.Cseq++;
@@ -31,17 +31,19 @@ var RTSPClient = function(Options) {
         var responseStatus = null;
         responseStatus = regularUtils.responseType(data);
         if(responseStatus == false) {
-            Options.logger.verbose("Response from server: Error code in response\n");
+            Options.logger.error("Response from server: Error code in response\n");
+            Options.logger.debug("\n<<<\nServer Response:\n"+data.toString());
+            process.exit();
         }else{
             Options.logger.verbose("Response from server: 200 OK response\n");
         }
-        Options.logger.debug("\n<<<\nServer Response:\n"+data.toString()+"<<<");
+        Options.logger.debug("\n<<<\nServer Response:\n"+data.toString());
 
         if(State == 0) {
             if (Options.msys === 'dvbt') {
                 messages.setupMessageDVBT(Options, function (message) {
                     Options.logger.verbose("SETUP DVBT\n");
-                    Options.logger.debug(">>>\nClient Message:\n"+message + ">>>")
+                    Options.logger.debug("\n>>>\nClient Message:\n"+message)
                     Client.write(message);
                     Options.Cseq++;
                     State = 5;
@@ -50,14 +52,19 @@ var RTSPClient = function(Options) {
             else if (Options.msys === 'dvbs' || Options.msys === 'dvbs2') {
                 messages.setupMessageDVBS(Options, function (messageSETUP) {
                     Options.logger.verbose("SETUP DVBS/DVBS2\n");
-                    Options.logger.debug(">>>\nClient Message:\n"+messageSETUP + ">>>");
+                    Options.logger.debug("\n>>>\nClient Message:\n"+messageSETUP);
                     Client.write(messageSETUP);
                     Options.Cseq++;
                     State = 5;
                 });
             }else{
-                Options.logger.error("Msys not specified in command! Exit...\n");
-                process.exit();
+                messages.setupMessageGeneric(Options,function(messageGeneric){
+                    Options.logger.verbose("SETUP Generic\n");
+                    Options.logger.debug("\n>>>\nClient Message:\n"+messageGeneric);
+                    Client.write(messageGeneric);
+                    Options.Cseq++;
+                    State = 5;
+                })
             }
             return;
         }
@@ -73,7 +80,7 @@ var RTSPClient = function(Options) {
         if(State == 5 && Options.session !== undefined){
             messages.playAddpids(Options, function(messagePlayAdd){
                 Options.logger.verbose("PLAY\n");
-                Options.logger.debug(">>>\nClient Message:\n"+messagePlayAdd+">>>");
+                Options.logger.debug(">>>\nClient Message:\n"+messagePlayAdd);
                 Client.write(messagePlayAdd);
                 State = 2;
             });
@@ -107,7 +114,7 @@ var RTSPClient = function(Options) {
             Options.Cseq++;
             messages.optionsMessage(Options, function(messageOpt){
                 Options.logger.verbose("OPTIONS ( Maintain Connection )\n");
-                Options.logger.debug(">>>\nClient Message:\n"+messageOpt+">>>");
+                Options.logger.debug(">>>\nClient Message:\n"+messageOpt.toString());
                 Client.write(messageOpt);
             })
         }

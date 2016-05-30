@@ -58,7 +58,5 @@ Execute in a shell:
 
     dumprtp 127.0.0.1 12345 > capture.ts
 
-
-
 ##TO-DO##
 

@@ -109,6 +109,40 @@ exports.setupMessageDVBS = function(options,cb){
     msgOut += "\r\n";
     cb(msgOut);
 }
+
+exports.setupMessageGeneric = function(options,cb){
+
+    var msgOut = new String();
+    msgOut += "SETUP rtsp://"+options.externServer+":"+options.serverPort;
+    if(options.commands){
+        msgOut += "/"+options.comanda
+    }else {
+    }
+    msgOut += "&pids=0";
+    msgOut += " RTSP/1.0\r\n";
+    msgOut += "CSeq: "+options.Cseq+"\r\n";
+    if(options.session !== undefined){
+        msgOut += "Session: "+options.session+"\r\n";
+    }
+    msgOut += "Transport: RTP/AVP;";
+    if(options.multicast) {
+        msgOut += "multicast;";
+        if(options.destination !== undefined) {
+            msgOut += "destination="+options.destination+";";
+        }
+        if(options.ttl == undefined) {
+            msgOut += "port=" + options.destinationPorts + "\r\n";
+        }else{
+            msgOut += "port=" + options.destinationPorts +";ttl="+options.ttl+ "\r\n";
+        }
+    }
+    else{
+        msgOut += "unicast;";
+        msgOut += "client_port="+options.destinationPorts+"\r\n";
+    }
+    msgOut += "\r\n";
+    cb(msgOut);
+}
 exports.teardownMessage =function(options,cb){
     var msgOut = new String();
     msgOut += "TEARDOWN rtsp://"+options.externServer+":"+options.serverPort+"/"+"stream="+options.stream+" RTSP/1.0\r\n";
