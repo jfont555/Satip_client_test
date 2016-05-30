@@ -55,6 +55,9 @@ var RTSPClient = function(Options) {
                     Options.Cseq++;
                     State = 5;
                 });
+            }else{
+                Options.logger.error("Msys not specified in command! Exit...\n");
+                process.exit();
             }
             return;
         }
