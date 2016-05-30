@@ -6,6 +6,9 @@ var stdio = require('stdio');
 var VerEx = require('verbal-expressions');
 var logger = require('winston');
 
+
+console.log("\n\n\n");
+
 var optionss = stdio.getopt({
     'multicast': {
         key: 'm',
@@ -75,6 +78,7 @@ function Init(cb) {
         logger.add(logger.transports.File, loggerOptions);
 
         options.logger = logger;
+        options.logger.info("Init SAT>IP RTSP-Client test\n\n");
 
         process.argv.forEach(function (val) { // Parse all the arguments, also args in cmd string
             if (val !== undefined) {
@@ -180,7 +184,6 @@ function Init(cb) {
             }
         });
 
-
         if (optionss.multicast) {
             options.multicast = true;
         } else {
@@ -191,6 +194,13 @@ function Init(cb) {
             options.commands = true;
         } else {
             options.commands = false;
+        }
+        if(!options.commands){
+            if(options.msys == 'dvbt') {
+                options.logger.debug("Parameters Parsed: Freq=" + options.freq+" mtype="+options.mtype+" pids="+options.pids+" fe="+options.fe+" bw="+options.bw+" tmode="+options.tmode+" gi="+options.gi+"\n");
+            }else if (options.msys === 'dvbs' || options.msys === 'dvbs'){
+                options.logger.debug("Parameters Parsed: Freq=" + options.freq+" mtype="+options.mtype+" fe="+options.fe+" pids="+options.pids+" pol="+options.pol+" src="+options.src+" plts="+options.plts+" ro="+options.ro+" fec="+options.fec+"\n");
+            }
         }
         cb(options);
     } else {

@@ -11,9 +11,6 @@ var udpf = require('./udp_forward');
 
 var RTSPClient = function(Options) {
 
-    console.log("\n\n\n");
-    Options.logger.info("Init SAT>IP RTSP-Client test\n\n");
-
     var Client = new net.Socket();
     var State = 0; // State 0 = Initial; 1 = Setup; 2 = Play; 3 = Teardown
     var udpActive = false;
