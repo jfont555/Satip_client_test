@@ -7,7 +7,7 @@ exports.optionsMessage = function(options,cb){
 
     var msgOut = new String();
     msgOut += "OPTIONS rtsp://"+options.externServer+"/ RTSP/1.0\r\n";
-    msgOut += "Cseq: "+options.Cseq+"\r\n";
+    msgOut += "CSeq: "+options.Cseq+"\r\n";
     if(options.session !== undefined && options.session !== null){
         msgOut +="Session: "+ options.session+"\r\n";
     }
