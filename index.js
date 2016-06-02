@@ -211,7 +211,7 @@ function Init(cb) {
         }
         cb(options);
     } else {
-        options.logger.error("Wrong parameters!\n");
+        options.printHelp();
         process.exit();
     }
 }
