@@ -39,6 +39,11 @@ var optionss = stdio.getopt({
         description: 'Available parameters:\n\n                                satips=SERVER_IP:SERVER_PORT' +
         '\n\n                                cmd="All_Parameters(eg:?freq=1234&msys=dvbs&fec=89"' +
         '\n\n                                dst=DESTINATION_IP:CLIENT_PORT (PORT TO SEND RTP traffic)\n\n'
+    },
+    'logFile': {
+        key: 'l',
+        description: 'Save all log to a logFile',
+        args: 0
     }
 });
 function Init(cb) {
@@ -74,8 +79,10 @@ function Init(cb) {
             loggerOptions.level = 'info'
             logger.add(logger.transports.Console, loggerOptions);
         }
-        loggerOptions.filename = 'logFile.log'
-        logger.add(logger.transports.File, loggerOptions);
+        if(optionss.logFile) {
+            loggerOptions.filename = 'logFile.log'
+            logger.add(logger.transports.File, loggerOptions);
+        }
 
         options.logger = logger;
         options.logger.info("Init SAT>IP RTSP-Client test\n\n");
