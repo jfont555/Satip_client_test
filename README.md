@@ -28,6 +28,10 @@ satips=(server IP):(Server Port/Default 554) cmd="?freq=1234&msys=dvbs&fec=89&pi
 
 **-v --verbosity:** Verbosity level, info: 0, verbose: 1, debug: 2. Usage: -v {number}
 
+**-l --logFile:** Save all log to a logFile
+
+**-p --Port:** RTP port to be used by client, note that port+1 is used too. If is not defined destination port+2 will be used
+
 **--help:** All available args
 
 There are some default parameters if are not specified: (User parameters override them)
