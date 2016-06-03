@@ -18,7 +18,7 @@ Use it like other node tools
 
 satips=(server IP):(Server Port/Default 554) cmd="?freq=1234&msys=dvbs&fec=89&pids=504,234,0,12 ..." dst=(Client for the stream):(client port)
 
-**-m --multicast:** Boolean to indicate multicast
+**-m --multicast:** Boolean to indicate to receive multicast stream from server.
 
 **-t --ttl:** time to live for multicast
 
@@ -31,6 +31,8 @@ satips=(server IP):(Server Port/Default 554) cmd="?freq=1234&msys=dvbs&fec=89&pi
 **-l --logFile:** Save all log to a logFile
 
 **-p --Port:** RTP port to be used by client, note that port+1 is used too. If is not defined destination port+2 will be used
+
+**-l --logFile:** Save all log to a logFile
 
 **--help:** All available args
 
@@ -48,7 +50,10 @@ There are some default parameters if are not specified: (User parameters overrid
 
     node index.js satips=192.168.1.30:554 cmd="?src=1&freq=10773&pol=h&ro=0.20&msys=dvbs2&mtype=8psk&plts=on&sr=22000&fec=34&pids=0,17,18,96,255,259" dst=192.168.1.32:12345
 
-**Check RTP stream:**
+    node index.js satips=192.168.1.31:554 cmd="?freq=11627&pol=v&msys=dvbs&sr=22000&pids=all" dst=224.0.0.5:1234 -c
+
+
+##Check RTP stream:##
 
 **TReader:** RTPUnicast/12345
 
@@ -64,3 +69,6 @@ Execute in a shell:
 
 ##TO-DO##
 
+* Improve log
+* Make a script to execute like: 'satipClient [args]'
+* Change SETUP & PLAY behavior with pids=all. Send all pids with SETUP command. (Now it is send with PLAY addpids).
