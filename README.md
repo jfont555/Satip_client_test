@@ -1,8 +1,8 @@
 # Satip-client
 
-###SAT>IP client for test rtsp communication with SAT>IP server.
+### SAT>IP client for test rtsp communication with SAT>IP server.
 
-##How to install:##
+## How to install: ##
 
 From Source:
 
@@ -14,7 +14,7 @@ Install dependencies with:
 
 Use it like other node tools
 
-##How to use it:##
+## How to use it: ##
 
 satips=(server IP):(Server Port/Default 554) cmd="?freq=1234&msys=dvbs&fec=89&pids=504,234,0,12 ..." dst=(Client for the stream):(client port)
 
@@ -44,7 +44,7 @@ There are some default parameters if are not specified: (User parameters overrid
     plts: 'off',
     serverPort: '554',
 
-##Examples##
+## Examples
 
     node index.js satips=192.168.1.30:554 cmd="?src=1&freq=11347&pol=v&ro=0.35&msys=dvbs2&mtype=8psk&plts=on&sr=22000&fec=23&pids=0,17,18,6600,6610,6620,6630" dst=192.168.1.32:12345
 
@@ -52,15 +52,14 @@ There are some default parameters if are not specified: (User parameters overrid
 
     node index.js satips=192.168.1.31:554 cmd="?freq=11627&pol=v&msys=dvbs&sr=22000&pids=all" dst=224.0.0.5:1234 -c
 
-   ##Contribution##
 ## Motivate us!
 Feel free to star the project and/or message me about it. It is always super-exciting to see real-world people using this , and it helps us to prioritize new features and bug fixes.
 
 And if you find this useful, ensure that it is kept alive by donating:
 
-[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=VXA7HVEY2NM8Q)
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=FVAPQNL7S9GRS)
 
-##Check RTP stream:##
+## Check RTP stream: ##
 
 **TReader:** RTPUnicast/12345
 
@@ -74,7 +73,7 @@ Execute in a shell:
 
     dumprtp 127.0.0.1 12345 > capture.ts
 
-##TO-DO##
+## TO-DO
 
 * Improve log
 * Make a script to execute like: 'satipClient [args]'
